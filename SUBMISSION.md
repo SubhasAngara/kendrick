@@ -1,97 +1,92 @@
-# Kendrick — BUILDVERSE submission handoff
+# BUILDVERSE handoff - Kendrick
 
-## Submission identity
+## Identity
 
-- **Project:** Kendrick
-- **Primary track:** AI for Accessibility & Inclusion
-- **Secondary principle:** Responsible & Ethical AI
-- **Tagline:** Your words. Your meaning. Your moment.
-- **One sentence:** Kendrick is a review-first communication companion that turns fragments into a speaker-approved message, asks before making meaning-changing assumptions, and runs locally without a hosted AI provider.
+- Project: Kendrick
+- Track: AI for Accessibility & Inclusion
+- Design rule: Responsible AI
+- Tagline: Your words. Your meaning. Your moment.
+- One sentence: Kendrick turns a few words into a message the speaker reviews and can choose to speak, with local Qwen and optional Whisper, and no hosted suggestion API in this prototype.
 
-## Copy-ready project description
+## Short description (form / judges)
 
-For many people with nonfluent aphasia, the intended meaning may be present even when a complete sentence is difficult to produce in time for an everyday conversation. General dictation is designed primarily to turn natural speech into polished text. Kendrick starts from a different point: fragments, partial speech, or a few typed words.
+For some adults with nonfluent aphasia, the meaning is there while a full sentence is hard to finish in an everyday exchange. Dictation tools mostly turn fluent speech into polished writing. Kendrick starts from fragments or a few typed words.
 
-Kendrick records or accepts the person's words, keeps the transcript editable, and uses a local Qwen model to make the smallest useful grammatical repair. When a short fragment contains essential ambiguity, Kendrick asks for clarification instead of choosing an interpretation. Every proposed message remains editable and can only be spoken, copied, shared, or saved after the person reviews it.
+The app keeps those words editable. A local Qwen model through Ollama makes a small grammatical draft or asks one clarifying question when a short fragment is ambiguous. Nothing is spoken, copied, shared, or saved until the person reviews it.
 
-The prototype consists of an Expo/React Native app paired over trusted local Wi-Fi with an authenticated FastAPI service. Whisper `small.en` performs local speech transcription, and Qwen 2.5 1.5B runs through Ollama for sentence assistance. There is no hosted model API, account service, analytics, or persistent conversation history.
+Hardware path: Expo app on phone or web, paired over trusted Wi-Fi to a FastAPI service on a computer. Whisper small.en handles optional transcription. Qwen 2.5 1.5B runs in Ollama. No account service, analytics, or conversation history store in this build.
 
-Kendrick is an early accessibility prototype and design hypothesis. It has not been clinically validated or evaluated with intended users, and it is not a replacement for established AAC systems or clinical support.
+Early prototype. Not clinically validated. Not a stand-in for AAC systems or clinical support.
 
-## Implemented features
+## What is implemented
 
-- Recorded speech and typed input
-- Local Whisper transcription
-- Local Ollama/Qwen sentence assistance
-- Deterministic clarification for short topic-plus-time fragments
-- Meaning-change tripwires for names, numbers, negation, uncertainty, and perspective
-- Editable source transcript and editable final message
-- Mandatory review before output
-- Text-to-speech, copy, share, and device-local saved phrases
-- Pairing-code authentication, bounded requests, cancellation, and temporary-audio deletion
-- Accessible labels, live status messages, large controls, and typed fallback
+- typed input and optional recorded speech
+- local Whisper transcription
+- local Ollama / Qwen drafts
+- clarification for some short topic-plus-time fragments
+- checks aimed at names, numbers, negation, uncertainty, and speaker perspective
+- editable source and editable final message
+- review before output
+- speak, copy, share, saved phrases on device
+- pairing code, request limits, cancel, temp audio deletion
+- large controls, status text, typed fallback when speech is unavailable
 
-## Technology
+## Tech list
 
 - React Native, TypeScript, Expo, Expo Audio, Expo Speech
 - Python, FastAPI, Pydantic, httpx
-- faster-whisper with Whisper `small.en`
-- Ollama with Qwen 2.5 1.5B Instruct
-- Device AsyncStorage and SecureStore
+- faster-whisper / Whisper small.en
+- Ollama / Qwen 2.5 1.5B Instruct
+- AsyncStorage, SecureStore
 
-## Demonstration script — target 2:15
+## Demo script (~2:15)
 
-### 0:00–0:20 — The problem
+0:00-0:20 problem
 
-“Imagine knowing exactly what you want to say, but the conversation moves faster than the sentence arrives. For roughly two million people in the United States reported to have aphasia, communication barriers can affect ordinary moments like ordering coffee, refusing help, or changing an appointment.”
+"You know what you mean, but the sentence is late. NIH/NIDCD reports about two million people in the U.S. living with aphasia. Ordinary moments - coffee, a preference, an appointment - can hang on that gap."
 
-### 0:20–0:35 — The distinction
+0:20-0:35 distinction
 
-“Wispr Flow helps people turn natural speech into polished writing. Kendrick begins when complete speech is the barrier. It starts with fragments and ends with a message the person explicitly approves.”
+"Wispr Flow is strong at turning speech into polished writing. Kendrick is built around a few words and a message the person has to approve before it is spoken."
 
-### 0:35–1:15 — Clear fragment
+0:35-1:15 clear fragment
 
-1. Show Kendrick connected to Local AI.
+1. Show Local AI connected.
 2. Type `me tired need sit down`.
-3. Tap **Help me make a sentence**.
+3. Tap Help me make a sentence.
 4. Show `I am tired. I need to sit down.`
-5. Point out the original words and editable message.
-6. Tap **Speak this message**.
+5. Point at original words and the editable draft.
+6. Tap Speak this message.
 
-### 1:15–1:45 — Ambiguous fragment
+1:15-1:45 ambiguous fragment
 
-1. Start a new message.
+1. New message.
 2. Type `Jordan Friday`.
-3. Tap **Help me make a sentence**.
-4. Show the clarification question.
-5. Explain that Kendrick refuses to invent whether the person wants to call, meet, cancel, or reschedule.
+3. Tap Help me make a sentence.
+4. Show the clarifying question.
+5. Say we do not invent call vs meet vs cancel.
 
-### 1:45–2:05 — Local and responsible
+1:45-2:05 local / control
 
-“Whisper and Qwen run on this computer through FastAPI and Ollama. Kendrick protects meaning-critical words, treats the speaker's text as content rather than instructions, and never speaks automatically.”
+"Whisper and Qwen run on this computer. Meaning-sensitive words are guarded where we can. Speaker text is treated as content, not as orders for the model. Nothing speaks on its own."
 
-### 2:05–2:15 — Close
+2:05-2:15 close
 
-“Kendrick is not here to speak for someone. It gives them another way to finish what they started. Your words. Your meaning. Your moment.”
+"Kendrick is not here to speak for someone. It gives another way to finish what they started. Your words. Your meaning. Your moment."
 
-## Links to add
+## Links
 
-- **Public repository:** `[REPO_URL]`
-- **Demo video:** `[VIDEO_URL]`
-- **Presentation PDF:** `[PDF_URL_OR_UPLOAD]`
-- **Team/contact:** `[TEAM_AND_CONTACT]`
+- Public repo: https://github.com/SubhasAngara/kendrick
+- Demo video: [VIDEO_URL]
+- Team / contact: [TEAM_AND_CONTACT]
 
-## Final release checklist
+## Checklist
 
-- [ ] Replace every placeholder above
-- [ ] Repository is visible in a logged-out browser
-- [ ] `.connection.json`, `.venv`, `node_modules`, models, runtime binaries, recordings, and caches are not committed
-- [ ] README setup instructions render correctly
-- [ ] `npm run check:pitch` passes
-- [ ] `npm run check:mobile` passes
-- [ ] `python -m pytest local-ai/test_server.py -q` passes
-- [ ] Demo begins with warmed models
-- [ ] Demo video audio is understandable and the app text is legible
-- [ ] Pitch PDF contains the final repository, video, team, and contact details
-- [ ] No accuracy, clinical-effectiveness, adoption, certification, “first,” or superiority claim appears
-- [ ] HackCulture submission opens correctly after submission
+- [ ] Video link is public ("Anyone with the link")
+- [ ] Repo opens logged out
+- [ ] No `.connection.json`, `.venv`, `node_modules`, models, or runtimes in git
+- [ ] README run steps still accurate
+- [ ] Models warmed before recording
+- [ ] Video text readable, audio clear enough
+- [ ] No accuracy, clinical benefit, adoption, certification, "first," or superiority claims
+- [ ] Form confirmation saved after submit

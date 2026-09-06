@@ -1,148 +1,137 @@
-# BUILDVERSE submission answers — Kendrick
+# BUILDVERSE form answers - Kendrick
 
-Use these fields as-is (or lightly edit). Replace every `[PASTE …]` link before submitting.
+Paste these into the form. Put your public Drive video URL in the last field before you submit.
 
 ---
 
 ## Theme *
-**Responsible AI & Inclusive Innovation**
+
+Responsible AI & Inclusive Innovation
 
 ---
 
 ## Problem Statement *
-**AI for Accessibility & Inclusion**
+
+AI for Accessibility & Inclusion
 
 ---
 
 ## Project Title *
-**Kendrick**
+
+Kendrick
 
 ---
 
 ## Describe your solution and its key features*
 
-Kendrick is an everyday communication assistant for adults with nonfluent aphasia who can contribute a few spoken or typed words and review a suggested message, independently or with support.
+Kendrick is a communication app for adults with nonfluent aphasia who can contribute a few spoken or typed words and review a suggested message, on their own or with help.
 
-**One-line:** Kendrick helps people with aphasia turn a few spoken or typed words into a message they review and choose to speak.
+One line: Kendrick helps people with aphasia turn a few spoken or typed words into a message they review and choose to speak.
 
-**Tagline:** Your words. Your meaning. Your moment.
+Tagline: Your words. Your meaning. Your moment.
 
-After a stroke, some people experience aphasia: difficulty using or understanding language. Someone may know what they want to say and still struggle to form a complete sentence in time for an ordinary moment—ordering coffee, expressing a preference, or making a request.
+Aphasia can follow a stroke. Someone may know what they want and still struggle to finish a sentence in time for an ordinary exchange, like ordering coffee or stating a preference. Kendrick starts from those keywords, offers a draft, and keeps the person in charge of edits, rejection, original wording, and whether anything is spoken, copied, shared, or saved.
 
-Kendrick starts from those keywords or fragments and helps compose a draft message. The person stays in control: they can edit, reject, keep their original words, and choose whether the message is spoken aloud, copied, shared, or saved.
+In the current build you can:
+- type fragments (this is the reliable demo path)
+- optionally record speech, transcribed on the computer with Whisper
+- get a local Qwen draft through Ollama, or one clarifying question when a short fragment is ambiguous
+- edit the source words and the draft
+- review before speak / copy / share / save
+- keep a small phrase list on the device
+- pair an Expo app with a FastAPI service on trusted Wi-Fi, with no hosted model API for suggestions
 
-**Key features in the current prototype**
-- Typed fragment input (primary, reliable demo path)
-- Optional speech recording, transcribed locally with Whisper
-- Local sentence assistance with Qwen (via Ollama) that drafts a readable message or asks one clarifying question when meaning is unclear
-- Editable source words and editable draft
-- Mandatory review before speak / copy / share / save
-- On-device phrasebook for saved messages
-- Pairing between an Expo iPhone/web app and a local FastAPI service over trusted Wi‑Fi (no hosted model API for suggestions)
-
-**Honest scope**
-This is an early accessibility prototype. It has not been clinically validated or evaluated with intended users. It does not replace established AAC systems, clinicians, or communication supports. Future ideas (symbol tiles, multiple sentence choices, highlighted AI additions) are not claimed as finished in this submission.
+This is early software. It has not been clinically validated. It does not replace AAC systems or clinical care. Symbol tiles, multiple sentence choices, and marked AI-added words are later ideas, not part of what we claim is finished here.
 
 ---
 
 ## What makes your solution innovative or unique?*
 
-Kendrick’s focus is **review-first communication for keyword-to-message participation**, not faster general dictation.
+We are aiming at review-first keyword-to-message help for everyday talk, not faster general dictation.
 
-There is real overlap with tools like Wispr Flow (spoken input → polished writing) and with AAC apps that help people construct and speak messages (including AI-assisted prediction). We do not claim to be the first or only product in this space.
+Wispr Flow turns spoken input into polished writing. AAC apps already help people build and speak messages, sometimes with prediction. We do not say we are first, and we do not say nobody else helps people communicate.
 
-What we optimize for in this prototype:
-- A starting point of **a few words**, not necessarily fluent continuous speech
-- **Clarification before guessing** when a short fragment is ambiguous (with known limitations)
-- **Visible human approval** before anything is spoken or shared
-- **Local inference** (Qwen via Ollama; optional Whisper) so message composition does not require a hosted AI provider
-- Treating the speaker’s words as **content to preserve**, not instructions for the model to obey
-- Conservative meaning-change checks for names, numbers, negation, uncertainty, and perspective
+What this prototype leans on:
+- starting from a few words, not only fluent continuous speech
+- asking before guessing when a short fragment is ambiguous (this detector still misses cases)
+- requiring a human yes before speak or share
+- running Qwen via Ollama locally, with Whisper as an optional path, so suggestions do not need a hosted AI provider
+- treating the speaker's text as content to keep, not as instructions for the model
+- simple checks around names, numbers, negation, uncertainty, and who is speaking
 
-The claim for this hackathon is narrower and stronger: a focused, testable communication prototype for people who can supply keywords and verify the resulting message—designed so the person remains the author of what gets said.
+For the hackathon our claim is modest: a focused prototype worth testing with people who can supply keywords and verify the result, with the person still owning the final message.
 
 ---
 
 ## What technologies, AI tools, and frameworks did you use?*
 
-- **App:** React Native, TypeScript, Expo (Expo Audio, Expo Speech, SecureStore, AsyncStorage)
-- **Local service:** Python, FastAPI, Pydantic, httpx
-- **Speech (optional path):** faster-whisper · Whisper `small.en` (on-device/computer, local files)
-- **Language model:** Ollama · Qwen 2.5 1.5B Instruct (local)
-- **Auth / privacy posture:** pairing-code bearer auth, request size limits, temporary audio deletion, no analytics / no account service / no hosted suggestion API in this prototype
+- App: React Native, TypeScript, Expo (Expo Audio, Expo Speech, SecureStore, AsyncStorage)
+- Local service: Python, FastAPI, Pydantic, httpx
+- Optional speech path: faster-whisper, Whisper small.en, files kept on the computer
+- Language model: Ollama, Qwen 2.5 1.5B Instruct, local
+- Pairing code auth, request size limits, temp audio deletion, no analytics account layer, no hosted suggestion API in this prototype
 
 ---
 
 ## How does your solution work technically?*
 
-1. The person opens the **Expo app** and pairs it once with a computer running Kendrick’s local service (LAN URL + pairing code).
-2. They enter a few words by **typing**, or optionally **record speech**.
-3. Optional speech is sent to the local service and transcribed with **Whisper**; the transcript remains editable.
-4. On “Help me make a sentence,” the service:
-   - may **clarify** short ambiguous fragments (for example, a name + a day) instead of inventing an interpretation;
-   - otherwise asks **Qwen via Ollama** for a restrained grammatical draft that preserves meaning-critical content;
-   - applies conservative validation tripwires; if meaning appears to change, it asks for more detail instead of returning a risky draft.
-5. The app shows the draft for **review**. The person can edit, reject, return to their words, or start over.
-6. Only after approval can they **speak** (device TTS), **copy**, **share**, or **save** the message.
+1. Open the Expo app and pair once with the computer (LAN URL + pairing code).
+2. Type a few words, or optionally record speech.
+3. If there is audio, Whisper on the computer returns an editable transcript.
+4. On "Help me make a sentence," the service may ask one clarifying question for short ambiguous fragments (for example a name plus a day). Otherwise it asks Qwen via Ollama for a restrained draft and runs conservative checks; if meaning looks changed, it asks for more detail instead of shipping a bad draft.
+5. The app shows the draft for review. Edit, reject, go back to the original words, or start over.
+6. Only after approval can the person speak (device TTS), copy, share, or save.
 
-Main path for judging: **phone/web UI → local FastAPI → Qwen/Ollama → human review → optional speak.**  
-Whisper is an optional input branch, not required for the core demo.
+Judge path: app UI -> local FastAPI -> Qwen/Ollama -> human review -> optional Speak. Whisper is optional and not required for the core demo.
 
 ---
 
 ## Share your project demo or prototype link*
+
 https://github.com/SubhasAngara/kendrick
 
-(Prototype lives in this public repo — Expo app + local AI. Run instructions are in the README.)
+The prototype is this public repo (Expo app + local AI). Setup notes are in the README.
 
 ---
 
 ## Share your GitHub repository link*
+
 https://github.com/SubhasAngara/kendrick
 
-Before pushing, exclude: `.connection.json`, `.venv`, `node_modules`, model weights, Ollama/runtime binaries, recordings, and caches.
+Do not commit `.connection.json`, `.venv`, `node_modules`, model weights, Ollama/runtime binaries, recordings, or caches.
 
 ---
 
 ## What impact can your solution create and what is its future scope?*
 
-**Intended impact (hypothesis, not proven outcome):**  
-Give adults with nonfluent aphasia another way to participate in everyday exchanges—requests, preferences, and short conversations—by turning keywords into a message they still author through review.
+Hypothesis, not a proven outcome: give adults with nonfluent aphasia another way to join everyday exchanges by turning keywords into a message they still author through review.
 
-NIH/NIDCD reports that about **2 million** people in the United States live with aphasia, and roughly **one in three** stroke survivors are affected. Those figures describe the condition’s scale, not Kendrick’s market size or guaranteed users. Our first audience is narrower: people who can contribute a few words and verify a suggested message.
+NIH/NIDCD reports about 2 million people in the United States live with aphasia, and about one in three stroke survivors are affected. That is the size of the condition, not our market size or a user forecast. Our first audience is narrower: people who can contribute a few words and verify a suggested message.
 
-**Near-term scope**
-- Co-design and evaluate with people with aphasia and speech-language pathologists
-- Measure meaning preservation, edit/reject rates, clarification usefulness, task completion, and perceived control
-- Harden ambiguity detection and local pairing UX
-- Keep speech recognition of aphasic speech as a research question—not a claimed capability
+Soon we want to co-design with people with aphasia and speech-language pathologists, and look at meaning hold, edits/rejects, whether clarifications help, task completion, and perceived control. Ambiguity detection and pairing UX still need work. Recognition of aphasic speech stays an open research question, not a claimed result.
 
-**Later scope (explicitly not done yet)**
-- Symbol-tile input
-- Multiple sentence candidates
-- Clearer visual distinction of AI-added words
-- Broader access methods and clinical partnership pathways
-
-We will not invent accuracy percentages, adoption numbers, or clinical benefit claims until those evaluations exist.
+Not done yet: symbol tiles, multiple sentence candidates, clearer marks for AI-added words, wider access methods, clinical partnerships. We will not invent accuracy percentages, adoption numbers, or clinical benefit claims until real evaluation exists.
 
 ---
 
 ## Share project demonstration video drive link. Make sure link is accessible by everyone*
-`[PASTE PUBLIC GOOGLE DRIVE / VIDEO URL — ANYONE WITH LINK CAN VIEW]`
 
-**Recommended 2–3 minute video outline**
-1. Problem: aphasia / keywords vs full sentence (15–20s)
-2. Demo A: type `coffee oat milk no sugar` → draft → Speak
-3. Demo B: type `Jordan Friday` → clarification (no guessed story)
-4. Note: local Qwen; review required; not clinically validated
-5. Close: “Your words. Your meaning. Your moment.”
+[PASTE PUBLIC GOOGLE DRIVE / VIDEO URL - ANYONE WITH THE LINK CAN VIEW]
+
+Suggested 2-3 minute take:
+1. Aphasia / keywords vs full sentence (15-20s)
+2. Type `coffee oat milk no sugar` -> draft -> Speak
+3. Type `Jordan Friday` -> clarification
+4. Say Qwen is local, review is required, no clinical validation
+5. Close on the tagline
 
 ---
 
-## Quick pre-submit checklist
-- [ ] Theme + problem track selected as above
-- [ ] Repo is public; opens while logged out
-- [ ] Video link is “Anyone with the link”
-- [ ] Demo/prototype field filled (repo README OK if needed)
-- [ ] No clinical validation / “first” / superiority claims left in the text
-- [ ] Team contact added in the form if a separate field appears
+## Before you hit submit
+
+- [ ] Theme and problem track match the answers above
+- [ ] Repo opens while logged out of GitHub
+- [ ] Video is set to "Anyone with the link"
+- [ ] Demo/prototype field filled (repo is fine)
+- [ ] No clinical validation / "first" / superiority wording left in
+- [ ] Team contact filled if the form asks for it

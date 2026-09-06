@@ -1,57 +1,61 @@
 # Kendrick local AI
 
-Whisper small.en (faster-whisper, CPU int8) transcribes audio. Qwen 2.5 1.5B Instruct GGUF (Q4_K_M), served by llama.cpp on loopback, repairs short messages. No OpenAI API or other paid hosted model is called. Both models work without internet once downloaded.
+This folder is the computer-side service. Whisper small.en (faster-whisper, CPU int8) can transcribe audio. Qwen 2.5 1.5B Instruct runs through Ollama for drafts and clarifications. No paid hosted model API is called for suggestions. Once the files are on disk, the models can run offline.
 
-## Existing setup
+## Start (usual path)
 
-From the project root:
+From the repo root on Windows, `start-local-ai.bat` is the easy entry. Or:
 
 ```powershell
 .\local-ai\.venv\Scripts\python.exe .\local-ai\start.py
 ```
 
-The launcher starts both processes, prints the LAN URL and pairing code, and stops both on Ctrl+C. It refuses to reuse occupied ports. Language model: `127.0.0.1:8099`. Phone API: port `8787`. Nothing is publicly deployed.
+`start.py` brings up Ollama, loads Qwen, then serves FastAPI on port `8787`. It prints the LAN URL and pairing code. Ctrl+C stops the children. If 11434 or 8787 is already taken, it exits instead of stacking a second copy.
 
-## Set up again on Windows
+Set `KENDRICK_ASSET_ROOT` if your models live in another folder (for example a sibling project that already downloaded them).
 
-Use Python 3.12, Node 22.13+, and about 3 GB free disk space for dependencies and models:
+## Fresh Windows setup
+
+Python 3.12, Node for the app side, and a few GB of disk for models:
 
 ```powershell
 py -3.12 -m venv local-ai/.venv
-local-ai/.venv/Scripts/python.exe -m pip install -r local-ai/requirements-lock.txt
-local-ai/.venv/Scripts/python.exe local-ai/setup_models.py
-local-ai/.venv/Scripts/python.exe local-ai/start.py
+local-ai/.venv\Scripts\python.exe -m pip install -r local-ai/requirements-lock.txt
+local-ai/.venv\Scripts\python.exe local-ai/setup_models.py
+local-ai/.venv\Scripts\python.exe local-ai/setup_ollama.py
+local-ai/.venv\Scripts\python.exe local-ai/start.py
 ```
 
-The setup script downloads official artifacts; the portable llama.cpp archive and Qwen model are checked against published SHA-256 digests. Model assets are in ignored `work/models/`, inference binaries in `work/runtime/`. Provenance is written to `work/models/sources.json`. The pairing credential is in ignored `.connection.json`; do not commit or publish it. Delete that file while the service is stopped to generate a new code next time.
+`setup_models.py` pulls Whisper and the Qwen GGUF into ignored `work/models/`. `setup_ollama.py` installs a portable Ollama under `work/runtime/`. Digests and sources land in `work/models/sources.json`. The pairing secret is `local-ai/.connection.json` (ignored). Delete that file while the server is stopped if you want a new code.
 
-## API
+## HTTP API
 
-All endpoints require `Authorization: Bearer <pairing-code>`.
+Every route wants `Authorization: Bearer <pairing-code>`.
 
-- `GET /health`: reports whether each model is ready.
-- `POST /transcribe`: raw M4A, WebM, or WAV bytes; max 8 MB / 120 seconds. Returns a reviewable transcript. Silence gets an explicit error. Temporary input is deleted in a finally block.
-- `POST /compose`: JSON `{ "text": "speaker's own words" }`, max 1,800 characters. Returns a draft or clarification. There is no numeric confidence or automatic speech/send.
+- `GET /health` - whether Whisper and Qwen look ready
+- `POST /transcribe` - raw M4A / WebM / WAV, max 8 MB / 120 seconds, returns a transcript you should review; silence returns an error; temp files are removed
+- `POST /compose` - JSON `{"text":"..."}` up to 1800 characters; returns a draft or a clarification; no auto-speak
 
-Only one inference runs at a time. Parallel requests get a retry message. The app has cancellation and bounded request timeouts. There is no account service, analytics, persistent message history, or third-party API. Local HTTP traffic is unencrypted; use trusted Wi-Fi only.
+One inference at a time. Extra requests get a retry-style error. The app can cancel. No accounts, analytics, or message history on the server. LAN traffic is unencrypted; private Wi-Fi only.
 
-## Verification
+## Checks
 
 ```powershell
-local-ai/.venv/Scripts/python.exe -m pytest local-ai/test_server.py -q
-local-ai/.venv/Scripts/python.exe local-ai/evaluate.py
-local-ai/.venv/Scripts/python.exe local-ai/check_audio.py
+local-ai/.venv\Scripts\python.exe -m pytest local-ai/test_server.py -q
+local-ai/.venv\Scripts\python.exe local-ai/evaluate.py
+local-ai/.venv\Scripts\python.exe local-ai/check_audio.py
 ```
 
-The last script expects `work/audio-fixture.wav`, a synthetic Windows TTS recording. It converts that fixture to iPhone-style M4A and WebM and checks silence. Development outputs are written to `outputs/`; they are not clinical accuracy measurements. The phrase evaluation includes prompt examples and a few held-out inputs, so it must not be presented as an independent benchmark.
+`check_audio.py` expects `work/audio-fixture.wav`. Outputs under `outputs/` are development logs, not clinical scores. The phrase eval mixes prompt examples with a few held-out strings, so do not sell it as an independent benchmark.
 
-Current known limitation: the small model can leave an ambiguous fragment such as a name plus a day unchanged instead of asking a useful question. The reviewer still sees the original and controls what is spoken. For production, evaluate larger models and collect consented speech examples from intended users.
+Known soft spot: a tiny model can still mishandle some ambiguous fragments. Deterministic name-plus-day style checks catch some of those before Qwen. The person on the phone still has the original words and the final say.
 
-Sources and licenses:
+## Licenses / sources
 
 - https://github.com/SYSTRAN/faster-whisper (MIT)
 - https://huggingface.co/Systran/faster-whisper-small.en
 - https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF (Apache 2.0 model)
-- https://github.com/ggml-org/llama.cpp (MIT)
+- https://ollama.com/
+- https://github.com/ggml-org/llama.cpp (MIT; used in older notes / tooling around GGUF)
 
-Keep upstream notices when redistributing their code or model files. `requirements-lock.txt` captures this machine's Python environment; `requirements.txt` records direct dependency bounds.
+Keep upstream notices if you redistribute their code or weights. `requirements-lock.txt` is the pinned environment from this machine; `requirements.txt` has the direct bounds.

@@ -1,45 +1,39 @@
-# Kendrick — functional prototype
+# Kendrick app notes
 
-Review-first communication companion for BUILDVERSE (AI for Accessibility & Inclusion).
+Small BUILDVERSE prototype. Accessibility track. Local models.
 
-## What it does
+## Flow
 
-1. Speak or type fragments
-2. Local Whisper transcribes speech
-3. Local Qwen (via Ollama) drafts a sentence or asks one clarifying question
-4. You review and approve
-5. Speak, copy, share, or save
+Type or speak a few words. Whisper can turn speech into text on the computer. Qwen through Ollama returns a draft or a clarifying question. You review, then speak, copy, share, or save. No hosted suggestion API, no accounts, no analytics in this build.
 
-No hosted AI API. No accounts. No analytics.
+## Windows run
 
-## Run (Windows)
-
-### 1. Local AI
+Computer:
 
 ```bat
 start-local-ai.bat
 ```
 
-Leave that terminal open. It prints a LAN URL and pairing code.
+Leave it open for the LAN URL and pairing code.
 
-### 2. iPhone app
+App:
 
 ```bat
 start-app.bat
 ```
 
-Open in Expo Go, go to **Settings**, enter the computer address and pairing code, then **Connect**.
+Expo Go -> Settings -> paste address and code -> Connect.
 
-### Demo script
+## Demo lines
 
-1. Type: `me need water please` → draft → Speak
-2. Type: `Jordan Friday` → clarification question
-3. Add detail → draft → Speak
+1. `me need water please` -> draft -> Speak
+2. `Jordan Friday` -> clarifying question
+3. Add detail -> draft -> Speak
 
-## Pitch
+## Pitch file
 
-Open `http://127.0.0.1:4174/kendrick-buildverse-pitch.html` (after `npm start` in the project root) or open `public/kendrick-buildverse-pitch.html`. Export PDF with the on-slide **PDF** button.
+With `npm start` at the repo root, open `http://127.0.0.1:4174/kendrick-buildverse-pitch.html`, or open `public/kendrick-buildverse-pitch.html` directly. Use the on-page PDF button if you want a printout.
 
-## Stack
+## Pieces
 
-Expo / React Native · FastAPI · faster-whisper · Ollama · Qwen 2.5 1.5B
+Expo / React Native, FastAPI, faster-whisper, Ollama, Qwen 2.5 1.5B.
