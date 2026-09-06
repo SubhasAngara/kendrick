@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/kendrick-logo-dark.png" alt="Kendrick" width="520" />
+  <img src="assets/kendrick-logo-dark.png" alt="Kendrick" width="360" />
 </p>
 
 <p align="center"><em>Your words. Your meaning. Your moment.</em></p>
