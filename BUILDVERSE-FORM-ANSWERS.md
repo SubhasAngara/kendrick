@@ -91,16 +91,14 @@ Whisper is an optional input branch, not required for the core demo.
 ---
 
 ## Share your project demo or prototype link*
-`[PASTE PUBLIC DEMO OR PROTOTYPE URL]`
+https://github.com/SubhasAngara/kendrick
 
-Suggested options when ready:
-- Public GitHub README with run instructions (acceptable if live hosting is unavailable)
-- Or a short public page / recorded walkthrough link if the live phone+LAN demo cannot be shared remotely
+(Prototype lives in this public repo — Expo app + local AI. Run instructions are in the README.)
 
 ---
 
 ## Share your GitHub repository link*
-`[PASTE PUBLIC GITHUB REPO URL]`
+https://github.com/SubhasAngara/kendrick
 
 Before pushing, exclude: `.connection.json`, `.venv`, `node_modules`, model weights, Ollama/runtime binaries, recordings, and caches.
 
