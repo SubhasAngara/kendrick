@@ -10,6 +10,13 @@ local-ai/*.pyc
 dist/
 work/
 outputs/
+_private/
+BUILDVERSE-FORM-ANSWERS.md
+SUBMISSION.md
+APP-README.md
+ASSET-NOTES.md
+FIX-FIREWALL.bat
+Kendrick-BUILDVERSE-Pitch.pdf
 .env
 .env.*
 *.tar.gz

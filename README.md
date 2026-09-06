@@ -26,14 +26,12 @@ Recording is optional. If you record, Whisper on the computer turns audio into e
 
 This is not a medical product. Nobody has run a formal study of this build with people who have aphasia. It does not replace AAC software or a clinician.
 
-## What's in the repo
+## Repo layout
 
 - `mobile/` - Expo / React Native app
 - `local-ai/` - FastAPI service on the PC
 - `assets/` - brand logos
-- `BUILDVERSE-FORM-ANSWERS.md` - text for the hackathon form
-- `SUBMISSION.md` - demo notes
-- `public/kendrick-buildverse-pitch.html` - pitch deck if you want it
+- `start-local-ai.bat` / `start-app.bat` - Windows helpers
 
 Model weights, Ollama binaries, `.venv`, `node_modules`, and `local-ai/.connection.json` are ignored. Leave them off GitHub.
 
@@ -56,6 +54,8 @@ cd mobile
 npm install
 npx expo start
 ```
+
+Or run `start-app.bat` from the repo root.
 
 In Settings, paste the address and code, then connect. Wait until suggestions show ready.
 
