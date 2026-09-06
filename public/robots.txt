@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://kendrick-communication.rnd4-anj.chatgpt.site/sitemap.xml

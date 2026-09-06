@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Kendrick",
+    "slug": "kendrick",
+    "version": "0.1.0",
+    "scheme": "kendrick",
+    "orientation": "default",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/kendrick-splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0C0C0E"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.kendrick.communication",
+      "infoPlist": {
+        "NSLocalNetworkUsageDescription": "Kendrick connects to your computer on Wi-Fi for local transcription and sentence suggestions.",
+        "NSAppTransportSecurity": {
+          "NSAllowsLocalNetworking": true
+        }
+      }
+    },
+    "web": {
+      "name": "Kendrick · App preview",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Kendrick uses your microphone only when you tap Listen to record words for a message.",
+          "enableBackgroundRecording": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-font",
+      "expo-secure-store",
+      "expo-asset"
+    ]
+  }
+}

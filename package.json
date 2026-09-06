@@ -1,0 +1,15 @@
+{
+  "name": "kendrick-aac",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-site.mjs",
+    "check": "node scripts/check-site.mjs",
+    "check:pitch": "node scripts/validate-pitch.mjs",
+    "check:mobile": "cd mobile && npx tsc --noEmit",
+    "start": "node website-server.mjs",
+    "dev": "node --watch website-server.mjs",
+    "start:mobile": "cd mobile && npx expo start"
+  }
+}
